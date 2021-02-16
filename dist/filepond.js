@@ -4297,7 +4297,7 @@
   };
 
   var getFilenameFromURL = function getFilenameFromURL(url) {
-    if (!url) return 'file';
+    if (!url) return '';
 
     return url
       .split('/')

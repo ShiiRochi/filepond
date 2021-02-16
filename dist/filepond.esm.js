@@ -2206,7 +2206,7 @@ const isBase64DataURI = str =>
   );
 
 const getFilenameFromURL = url => {
-  if (!url) return 'file';
+  if (!url) return '';
 
   return url
     .split('/')
