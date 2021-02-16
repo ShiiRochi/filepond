@@ -4297,6 +4297,8 @@
   };
 
   var getFilenameFromURL = function getFilenameFromURL(url) {
+    if (!url) return 'file';
+
     return url
       .split('/')
       .pop()
@@ -12256,6 +12258,10 @@
       });
     };
 
+    var abortAll = function abortAll() {
+      store.dispatch('ABORT_ALL');
+    };
+
     var exports = Object.assign(
       {},
 
@@ -12339,6 +12345,12 @@
         prepareFiles: prepareFiles,
 
         /**
+         * Stop active processes (file uploads, fetches, stuff like that),
+         * loop over items and depending on states call abort for ongoing processes
+         */
+        abortAll: abortAll,
+
+        /**
          * Sort list of files
          */
         sort: function sort(compare) {
@@ -12365,7 +12377,7 @@
 
           // stop active processes (file uploads, fetches, stuff like that)
           // loop over items and depending on states call abort for ongoing processes
-          store.dispatch('ABORT_ALL');
+          abortAll();
 
           // destroy view
           view._destroy();

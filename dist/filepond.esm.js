@@ -2205,12 +2205,15 @@ const isBase64DataURI = str =>
     str
   );
 
-const getFilenameFromURL = url =>
-  url
+const getFilenameFromURL = url => {
+  if (!url) return 'file';
+
+  return url
     .split('/')
     .pop()
     .split('?')
     .shift();
+};
 
 const getExtensionFromFilename = name => name.split('.').pop();
 
@@ -9204,6 +9207,10 @@ const createApp = (initialOptions = {}) => {
     return mappedQueries.map(q => removeFile(q, options));
   };
 
+  const abortAll = () => {
+    store.dispatch('ABORT_ALL');
+  };
+
   const exports = {
     // supports events
     ...on(),
@@ -9284,6 +9291,12 @@ const createApp = (initialOptions = {}) => {
     prepareFiles,
 
     /**
+     * Stop active processes (file uploads, fetches, stuff like that),
+     * loop over items and depending on states call abort for ongoing processes
+     */
+    abortAll,
+
+    /**
      * Sort list of files
      */
     sort: compare => store.dispatch('SORT', { compare }),
@@ -9308,7 +9321,7 @@ const createApp = (initialOptions = {}) => {
 
       // stop active processes (file uploads, fetches, stuff like that)
       // loop over items and depending on states call abort for ongoing processes
-      store.dispatch('ABORT_ALL');
+      abortAll();
 
       // destroy view
       view._destroy();
